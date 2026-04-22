@@ -1,0 +1,20 @@
+{
+  "sys_name": "bixi_montreal",
+  "account": "montreal.raccoon.bike",
+  "lang": "EN",
+  "brand": "Bixi",
+  "hashtags": [
+    "#velomtl"
+  ],
+  "palette": [
+    "#FF5B71",
+    "#3286AD"
+  ],
+  "sys_type": "stations",
+  "extent": [
+    -73.72,
+    -73.47,
+    45.42,
+    45.6
+  ]
+}

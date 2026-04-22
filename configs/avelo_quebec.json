@@ -1,0 +1,21 @@
+{
+  "sys_name": "avelo_quebec",
+  "account": "quebec.raccoon.bike",
+  "lang": "FR",
+  "brand": "aV\u00e9lo",
+  "hashtags": [
+    "#avelo",
+    "#veloquebec"
+  ],
+  "palette": [
+    "#3BD4AE",
+    "#F2F2F2"
+  ],
+  "sys_type": "stations",
+  "extent": [
+    -71.28,
+    -71.19,
+    46.8,
+    46.87
+  ]
+}

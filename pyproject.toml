@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["bot"]
+
+[project]
+name = "bikesharebots"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "bikeraccoon",
+    "matplotlib",
+    "seaborn",
+    "numpy",
+    "shapely",
+    "geopandas",
+    "cartopy",
+    "atproto>=0.0.65",
+]
+
+[project.scripts]
+bikesharebots = "bot.cli:main"
+
+[tool.uv.sources]
+bikeraccoon = { git = "https://github.com/mjarrett/bikeraccoon" }

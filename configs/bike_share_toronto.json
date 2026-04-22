@@ -1,0 +1,20 @@
+{
+  "sys_name": "bike_share_toronto",
+  "account": "toronto.raccoon.bike",
+  "lang": "EN",
+  "brand": "Toronto Bikeshare",
+  "hashtags": [
+    "#bikeTO"
+  ],
+  "palette": [
+    "#8357B2",
+    "#3286AD"
+  ],
+  "sys_type": "stations",
+  "extent": [
+    -79.556,
+    -79.283,
+    43.572,
+    43.774
+  ]
+}
