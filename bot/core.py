@@ -52,11 +52,12 @@ def make_tweet_text(api, t1, path='./', lang='EN'):
     t2 = t1 + dt.timedelta(hours=23)
 
     sdf = api.get_stations()
+    sdf = sdf[sdf['active']]
     thdf = api.get_station_trips(t1, t2, freq='d', station='all')
     thdf_sdf = pd.merge(sdf, thdf, how='inner', on='station_id')
     ntrips = thdf_sdf['trips'].sum()
 
-    #sdf = sdf[sdf['active']]
+    
 
     thdf_sdf = thdf_sdf.sort_values('trips', ascending=False)
     busiest_station = thdf_sdf['name'].iloc[0].split('(')[0].strip()
