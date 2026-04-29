@@ -1,6 +1,6 @@
-# bikesharebots
+# bikeraccoonbots
 
-Daily bikeshare stats bots for Bluesky. Each run fetches trip data from the [bikeraccoon](https://github.com/mjarrett/bikeraccoon) API, generates four figures, and posts them with a summary to a Bluesky account.
+Daily bikeshare stats bots for social media, currently supporting Bluesky/ATProto. Each run fetches trip data from the [bikeraccoon](https://github.com/mjarrett/bikeraccoon) API, generates four figures, and posts them with a summary to a Bluesky account.
 
 ## Generated output
 
