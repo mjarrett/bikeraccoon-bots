@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bikeraccoon-bots dashboard</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  header h1 { font-size: 1.5rem; font-weight: 700; color: #fff; }
+
+  .refresh-btn {
+    text-decoration: none;
+    background: #1e40af;
+    color: #fff;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+  }
+  .refresh-btn:hover { background: #2563eb; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .account-card {
+    background: #1a1f2e;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #2d3748;
+  }
+
+  .account-header {
+    background: #0f3460;
+    padding: 0.9rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .account-header h2 { font-size: 1rem; font-weight: 600; flex: 1; }
+  .account-header h2 a { color: #93c5fd; text-decoration: none; }
+  .account-header h2 a:hover { text-decoration: underline; }
+
+  .status-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .status-posted { background: #14532d; color: #86efac; }
+  .status-partial { background: #3b2f0a; color: #fcd34d; }
+  .status-pending { background: #1e3a5f; color: #93c5fd; }
+
+  .error-msg {
+    padding: 1rem 1.2rem;
+    color: #f87171;
+    font-size: 0.85rem;
+  }
+
+  .posts { padding: 0.75rem 1rem; }
+
+  .post {
+    background: #0d1117;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid #1e2737;
+  }
+  .post:last-child { margin-bottom: 0; }
+
+  .post-text {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #cbd5e1;
+    margin-bottom: 0.6rem;
+  }
+
+  .post-images {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+  }
+  .post-images img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #2d3748;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.78rem;
+    color: #64748b;
+  }
+
+  .stat { display: flex; align-items: center; gap: 0.25rem; }
+  .stat-icon { font-size: 0.8rem; }
+  .stat-val { font-weight: 600; color: #94a3b8; }
+
+  .post-time { margin-left: auto; color: #64748b; text-decoration: none; }
+  .post-time:hover { color: #93c5fd; text-decoration: underline; }
+
+  .replies-toggle {
+    background: none;
+    border: none;
+    color: #60a5fa;
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 0.5rem;
+    display: block;
+  }
+  .replies-toggle:hover { text-decoration: underline; }
+
+  .replies { margin-top: 0.6rem; display: none; }
+  .replies.open { display: block; }
+
+  .reply {
+    background: #111827;
+    border-left: 3px solid #1e40af;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 0.4rem;
+    border-radius: 0 6px 6px 0;
+  }
+  .reply-author { font-size: 0.75rem; color: #60a5fa; font-weight: 600; margin-bottom: 0.2rem; }
+  .reply-text { font-size: 0.82rem; color: #94a3b8; white-space: pre-wrap; word-break: break-word; }
+  .reply-meta { font-size: 0.72rem; color: #475569; margin-top: 0.2rem; }
+
+  .no-replies { font-size: 0.78rem; color: #475569; font-style: italic; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>bikeraccoon-bots dashboard</h1>
+  <a class="refresh-btn" href="/?refresh=true">↻ Refresh</a>
+</header>
+
+<div class="grid">
+  {% for handle, acct in accounts.items() %}
+  <div class="account-card">
+    <div class="account-header">
+      <h2><a href="https://bsky.app/profile/{{ handle }}" target="_blank" rel="noopener">@{{ handle }}</a></h2>
+      {% if acct.posts_today >= acct.expected %}
+        <span class="status-badge status-posted">✓ Posted today{% if acct.expected > 1 %} ({{ acct.posts_today }}/{{ acct.expected }}){% endif %}</span>
+      {% elif acct.posts_today > 0 %}
+        <span class="status-badge status-partial">{{ acct.posts_today }}/{{ acct.expected }} posted{% if acct.window_str %} · {{ acct.window_str }}{% endif %}</span>
+      {% elif acct.window_str %}
+        <span class="status-badge status-pending">⏳ {{ acct.window_str }}</span>
+      {% endif %}
+    </div>
+
+    {% if acct.error %}
+      <div class="error-msg">⚠ {{ acct.error }}</div>
+    {% else %}
+      <div class="posts">
+        {% for post in acct.posts %}
+        <div class="post">
+          <div class="post-text">{{ post.text }}</div>
+
+          {% if post.images %}
+          <div class="post-images">
+            {% for img in post.images %}
+            <img src="{{ img }}" alt="post image">
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <div class="post-meta">
+            <span class="stat"><span class="stat-icon">♥</span><span class="stat-val">{{ post.like_count }}</span></span>
+            <span class="stat"><span class="stat-icon">💬</span><span class="stat-val">{{ post.reply_count }}</span></span>
+            <span class="stat"><span class="stat-icon">🔁</span><span class="stat-val">{{ post.repost_count }}</span></span>
+            <a class="post-time" href="{{ post.url }}" target="_blank" rel="noopener">{{ post.indexed_at }}</a>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+function toggleReplies(btn) {
+  const replies = btn.nextElementSibling;
+  const open = replies.classList.toggle('open');
+  const n = btn.textContent.match(/\d+/)[0];
+  const word = n == 1 ? 'reply' : 'replies';
+  btn.textContent = (open ? 'Hide' : 'Show') + ' ' + n + ' ' + word;
+}
+</script>
+
+</body>
+</html>
