@@ -20,6 +20,9 @@ dependencies = [
     "geopandas",
     "cartopy",
     "atproto>=0.0.65",
+    "fastapi",
+    "uvicorn",
+    "jinja2",
 ]
 
 [project.scripts]
