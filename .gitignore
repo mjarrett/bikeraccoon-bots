@@ -1,0 +1,6 @@
+.weather_cache/
+__pycache__/
+bot.credentials.json
+bot/__pycache__/
+logs/
+output/
