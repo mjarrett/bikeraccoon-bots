@@ -3,7 +3,7 @@ import os
 import re
 import subprocess
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from glob import glob
 
 from atproto import Client
@@ -45,7 +45,7 @@ def fetch_account_data(handle: str, password: str) -> list:
     client = Client()
     client.login(handle, password)
 
-    feed_resp = client.get_author_feed(actor=handle, limit=10)
+    feed_resp = client.get_author_feed(actor=handle, limit=20)
     posts = []
     for item in feed_resp.feed:
         p = item.post
@@ -56,7 +56,6 @@ def fetch_account_data(handle: str, password: str) -> list:
 
         rkey = p.uri.split("/")[-1]
         post_url = f"https://bsky.app/profile/{handle}/post/{rkey}"
-
         posts.append({
             "text": text,
             "uri": p.uri,
@@ -151,15 +150,17 @@ async def index(request: Request, refresh: bool = False):
 
         accounts[handle] = {
             **entry,
+            "last_post": posts[0] if posts else None,
             "posts_today": posts_today,
             "expected": expected,
             "window_str": window_str,
         }
 
+    yesterday = today - timedelta(days=1)
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"accounts": accounts, "today": today.isoformat()},
+        context={"accounts": accounts, "today": today, "yesterday": yesterday},
     )
 
 
